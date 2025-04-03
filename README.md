@@ -1,4 +1,4 @@
-# Data Warehouse and Analytics Project
+# Data Warehouse Project
 🚀 Building a modern data warehouse with SQL Server Management Studio (SSMS), including ETL processes and data modeling. 
 
 
@@ -30,11 +30,11 @@ Data Modeling: Developing fact and dimension tables optimized for analytical que
 
 
 ## 🎯 Project Requirements
-Building the Data Warehouse (Data Engineering)
-Objective
-Develop a modern data warehouse using SQL Server to consolidate sales data, enabling analytical reporting and informed decision-making.
 
-Specifications
+Building the Data Warehouse (Data Engineering) in SSMS
+
+#### Specifications
+
 Data Sources: Import data from two source systems (ERP and CRM) provided as CSV files.
 Data Quality: Cleanse and resolve data quality issues prior to analysis.
 Integration: Combine both sources into a single, user-friendly data model designed for analytical queries.
@@ -43,8 +43,10 @@ Documentation: Provide clear documentation of the data model to support both bus
 
 
 
+
 ## Data Integration Model
 ![Database Schema: Star Schema](docs/Integration_model.png)
+
 
 
 ## Database Schema
