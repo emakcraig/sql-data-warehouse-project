@@ -2,7 +2,7 @@
 Building a modern data warehouse with SQL Server Management Studio (SSMS), including ETL processes, data modeling, and analytics
 
 Welcome to the Data Warehouse and Analytics Project repository! 🚀
-This project demonstrates a comprehensive data warehousing and analytics solution, from building a data warehouse to generating actionable insights. Designed as a portfolio project, it highlights industry best practices in data engineering and analytics.
+This project demonstrates a comprehensive data warehousing. Designed as a portfolio project, it highlights industry best practices in data engineering.
 
 🏗️ Data Architecture
 The data architecture for this project follows Medallion Architecture Bronze, Silver, and Gold layers: Data Architecture
@@ -24,7 +24,7 @@ Data Architect
 Data Engineering
 ETL Pipeline Developer
 Data Modeling
-Data Analytics
+
 
 Building the Data Warehouse (Data Engineering)
 Objective
