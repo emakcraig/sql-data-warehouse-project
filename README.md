@@ -37,4 +37,4 @@ Integration: Combine both sources into a single, user-friendly data model design
 Scope: Focus on the latest dataset only; historization of data is not required.
 Documentation: Provide clear documentation of the data model to support both business stakeholders and analytics teams.\
 
-![test](docs/data_flow diagram.png)
+![test](docs/star_schema.png)
