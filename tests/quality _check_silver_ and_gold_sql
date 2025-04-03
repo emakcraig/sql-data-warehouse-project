@@ -1,0 +1,110 @@
+*/
+==================================================================
+Quality Checks
+==================================================================
+This script performs quality checks to vaidate the integrity consistency and
+accuracy of the Gold Layer. The checks ensure:
+- Uniqueness of surrogate keys
+- Referential integrety between fact and dimension tables. 
+- Validation of relationships in the data model for analytical purposes. 
+
+Usage notes:
+- Run these checks after loading the silver layer. 
+- Investigate and resolve and discrepancies found during the checks. 
+==================================================================
+*/
+
+-- ==================================================================
+-- Checking 'silver.dim_customers'
+-- ==================================================================
+-- Check Uniqueness of Customer Key 
+-- Join Tables
+-- check duplicate rows
+-- check duplicate columns
+-- rename tables
+-- reorder columns
+-- create surrogate key
+-- gold layer will use virtual tables ie views. This will comprise of joined silver layer tables for easy analysis. 
+
+SELECT cst_id, COUNT(*) FROM
+	(SELECT 
+	ci.cst_id AS customer_id,
+	ci.cst_key AS customer_number,
+	ci.cst_firstname AS first_name,
+	ci.cst_lastname AS last_name,
+	ci.cst_marital_status AS marital_status, 
+	CASE WHEN ci.cst_grd != 'Unknown' THEN ci.cst_grd
+		 WHEN cu.gen!= 'n/a' THEN COALESCE(cu.gen, 'unknown') --Coalesce chooses the first non null value in a list
+		 ELSE 'Unknown'
+    END AS gender,
+	ci.cst_create_date AS create_date,
+	cu.bdate AS date_of_birth,
+	loc.cntry
+	FROM silver.crm_cust_info ci
+	LEFT JOIN silver.erp_cust_az12 AS cu
+	ON ci.cst_key = cu.cid
+	LEFT JOIN silver.erp_loc_a101 AS loc
+	ON ci.cst_key = loc.cid
+)t GROUP BY cst_id
+HAVING COUNT(*) >1
+
+--Check duplicate columns are the same
+-- Resolve conflicting entries
+
+SELECT DISTINCT	 
+	ci.cst_grd,
+	CASE WHEN ci.cst_grd != 'Unknown' THEN ci.cst_grd
+		 WHEN cu.gen!= 'n/a' THEN COALESCE(cu.gen, 'unknown') --Coalesce chooses the first non null value in a list
+		 ELSE 'Unknown'
+    END AS new_gen,
+	cu.gen
+	FROM silver.crm_cust_info ci
+	LEFT JOIN silver.erp_cust_az12 AS cu
+	ON ci.cst_key = cu.cid
+	LEFT JOIN silver.erp_loc_a101 AS loc
+	ON ci.cst_key = loc.cid
+	ORDER BY 1, 2
+
+-- ==================================================================
+-- Checking 'silver.erp_px_cat_g1v2'
+-- ==================================================================
+
+  -- check for duplicates
+  SELECT prd_key, COUNT(*) FROM (
+SELECT prd_id 
+      ,[prd_cat]
+      ,[prd_key]
+      ,[prd_nm]
+      ,[prd_cost]
+      ,[prd_line]
+      ,[prd_start_dt],
+	  cat.cat,
+	  cat.cubcat,
+	  cat.maintainance
+      
+  FROM [DataWarehouse].[silver].[crm_prd_info] as prd
+  LEFT JOIN silver.erp_px_cat_g1v2 as cat
+  ON prd.prd_cat= cat.id
+  WHERE prd_end_dt IS NULL -- Filter out all historical data
+  )t GROUP BY prd_key
+  HAVING COUNT(*) >1
+
+-- ==================================================================
+-- Checking gold tables
+-- run checks after creating gold views
+-- ==================================================================
+
+SELECT * FROM gold.dim_customers
+SELECT DISTINCT gender FROM gold.dim_customers
+
+SELECT * FROM gold.dim_products
+
+-- Foreign Key Integriry (Dimensions)
+--check everything is joined correctly
+SELECT * 
+FROM gold.fact_sales f
+LEFT JOIN gold.dim_customers c
+ON c.customer_id = f.customer_id
+LEFT JOIN gold.dim_products p
+ON p.product_id = f.product_id
+WHERE p.product_id IS NULL
