@@ -49,5 +49,3 @@ Documentation: Provide clear documentation of the data model to support both bus
 
 
 
-## Database Schema
-![Database Schema: Star Schema](docs/star_schema.png)
