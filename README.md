@@ -42,6 +42,10 @@ Scope: Focus on the latest dataset only; historization of data is not required.
 Documentation: Provide clear documentation of the data model to support both business stakeholders and analytics teams.
 
 
+## Database Schema
+![Database Schema: Star Schema](docs/star_schema.png)
+
+
 
 
 ## Data Integration Model
